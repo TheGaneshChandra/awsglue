@@ -50,7 +50,7 @@ try:
         .join(df_tr, "raceid", "left")
     
     print('# Select only relavent columns')
-    df = df.selectExpr("race_date", "year(race_date) as race_year", "position", "race_name", "concat(forename, surname) as driver_name", "points", "df_tds.driverstandingsid", "df_tds.raceid")
+    df = df.selectExpr("race_date", "year(race_date) as race_year", "position", "race_name", "concat(forename, surname) as driver_name", "points", "driverstandingsid", "raceid")
     
     print('# Write the data into s3 with glue catalog table enabled') 
     df.write.option("mode", "overwrite")\

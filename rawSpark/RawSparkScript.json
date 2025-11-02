@@ -23,9 +23,9 @@
     "--TempDir" : "s3://aws-glue-assets-153965392838-ap-south-1/temporary/"
   },
   "maxRetries" : 0,
-  "allocatedCapacity" : 10,
+  "allocatedCapacity" : 2,
   "timeout" : 480,
-  "maxCapacity" : 10.0,
+  "maxCapacity" : 2.0,
   "glueVersion" : "5.0",
   "numberOfWorkers" : 2,
   "workerType" : "G.1X",
