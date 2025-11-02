@@ -53,10 +53,10 @@ try:
     df = df.selectExpr("race_date", "year(race_date) as race_year", "position", "race_name", "concat(forename, surname) as driver_name", "points", "driverstandingsid", "raceid")
     
     print('# Write the data into s3 with glue catalog table enabled') 
-    df.write.option("mode", "overwrite")\
-                .option("partitionBy", "race_year")\
-                .option("compression", "snappy")\
-                .save("s3://formulaonegc/f1_world_championship/fact/")
+    df.write.partitionBy("race_year")\
+            .option("mode", "overwrite")\
+            .option("compression", "snappy")\
+            .save("s3://formulaonegc/f1_world_championship/fact/")
     
     print('# Code to Create / update glue catalog')
     
