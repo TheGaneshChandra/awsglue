@@ -52,9 +52,9 @@ try:
     print('# Select only relavent columns')
     df = df.selectExpr("race_date", "year(race_date) as race_year", "position", "race_name", "concat(forename, surname) as driver_name", "points", "driverstandingsid", "raceid")
     
-    print('# Write the data into s3 with glue catalog table enabled') 
+    print('# Write the data into s3 with pyspark') 
     df.write.partitionBy("race_year")\
-            .option("mode", "overwrite")\
+            .mode("overwrite")\
             .option("compression", "snappy")\
             .save("s3://formulaonegc/f1_world_championship/fact/")
 
