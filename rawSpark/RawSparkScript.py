@@ -4,6 +4,7 @@ from awsglue.utils import getResolvedOptions # pyright: ignore[reportMissingImpo
 from pyspark.context import SparkContext
 from awsglue.context import GlueContext # pyright: ignore[reportMissingImports]
 from awsglue.job import Job # pyright: ignore[reportMissingImports]
+from awsglue.dynamicframe import DynamicFrame, DynamicFrameWriter # pyright: ignore[reportMissingImports]
 
 ## @params: [JOB_NAME]
 args = getResolvedOptions(sys.argv, ['JOB_NAME'])
@@ -13,7 +14,6 @@ glueContext = GlueContext(sc)
 spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args['JOB_NAME'], args)
-job.commit()
 
 # Reference Query
 '''
@@ -57,8 +57,36 @@ try:
             .option("mode", "overwrite")\
             .option("compression", "snappy")\
             .save("s3://formulaonegc/f1_world_championship/fact/")
+
+    print('Create a dynamic frame from pyspark df')
+    dynamic_df = DynamicFrame.fromDF(df, glueContext)
+
+    print('Using glue write from options to save to s3')
+    x = glueContext.write_dynamic_frame_from_options(
+        frame = dynamic_df, 
+        connection_type = "s3", 
+        connection_options={"path":"s3://formulaonegc/f1_dynamic_fact/"},
+        format = "parquet"
+    )
     
-    print('# Code to Create / update glue catalog')
+    print('# Code to dynamcic Create / update glue catalog')
+    y = glueContext.write_dynamic_frame_from_catalog(
+        frame = dynamic_df,
+        database = "admin_prod",
+        table_name = "tablef1_dynamic_fact",
+        additional_options = {"enableUpdateCatalog": True}
+    )
+
+    print('Code to write data_frame to catalog')
+    z = glueContext.write_data_frame_from_catalog(
+        frame = df,
+        database = "admin_prod",
+        table_name = "tablefact",
+        additional_options = {"enableUpdateCatalog": True}
+    )
+
+    job.commit()
+    print('Program finished')
     
 except Exception as e:
     print(e)
