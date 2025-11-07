@@ -65,15 +65,18 @@ try:
     x = glueContext.write_dynamic_frame_from_options(
         frame = dynamic_df, 
         connection_type = "s3", 
-        connection_options={"path":"s3://formulaonegc/f1_dynamic_fact/"},
-        format = "parquet"
+        connection_options={"path":"s3://formulaonegc/f1_dynamic_fact/",
+                            "mode": "overwrite",
+                            "partitionKeys": ["race_year"]},
+        format = "parquet",
+        format_options = {"compression": "snappy"}
     )
     
     print('# Code to dynamcic Create / update glue catalog')
     y = glueContext.write_dynamic_frame_from_catalog(
         frame = dynamic_df,
         database = "admin_prod",
-        table_name = "tablef1_dynamic_fact",
+        table_name = "table_f1_dynamic",
         additional_options = {"enableUpdateCatalog": True}
     )
 
@@ -81,7 +84,7 @@ try:
     z = glueContext.write_data_frame_from_catalog(
         frame = df,
         database = "admin_prod",
-        table_name = "tablefact",
+        table_name = "table_f1_data",
         additional_options = {"enableUpdateCatalog": True}
     )
 

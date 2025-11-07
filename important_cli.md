@@ -5,6 +5,11 @@
 aws glue get-table --database-name admin_prod --name tabledriver_standings --query "Table.{Table:Name,Columns:StorageDescriptor.Columns[*].Name}"
 ```
 
+> Glue Context additional_options (we cant find this shit anywhere so saving up all I have used)
+```json
+    "enableUpdateCatalog": True
+```
+
 > Spark writing for best performace
 ```python
     # https://anuja-shukla.medium.com/how-to-write-pyspark-dataframes-to-s3-like-a-pro-with-aws-glue-c675eb99bd75
