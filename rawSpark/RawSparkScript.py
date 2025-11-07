@@ -77,7 +77,8 @@ try:
         frame = dynamic_df,
         database = "admin_prod",
         table_name = "table_f1_dynamic",
-        additional_options = {"enableUpdateCatalog": True}
+        additional_options = {"enableUpdateCatalog": True,
+                              "updateBehavior": "UPDATE_IN_DATABASE"}
     )
 
     print('Code to write data_frame to catalog')
@@ -85,7 +86,8 @@ try:
         frame = df,
         database = "admin_prod",
         table_name = "table_f1_data",
-        additional_options = {"enableUpdateCatalog": True}
+        additional_options = {"enableUpdateCatalog": True,
+                              "updateBehavior": "UPDATE_IN_DATABASE"}
     )
 
     job.commit()
