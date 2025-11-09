@@ -89,7 +89,25 @@ try:
         additional_options = {"enableUpdateCatalog": True,
                               "updateBehavior": "UPDATE_IN_DATABASE"}
     )
-
+    
+    print('Using sink to wirte to s3 and catalog at same time')
+    s3sink = glueContext.getSink(
+        path="s3://formulaonegc/f1_sink_fact/",
+        connection_type="s3",
+        enableUpdateCatalog = True,
+        updateBehavior="UPDATE_IN_DATABASE",
+        partitionKeys=["race_year"],
+        compression="snappy"
+    )
+        
+    s3sink.setCatalogInfo(
+        catalogDatabase="admin_prod", catalogTableName="f1_sink"
+    )
+        
+    s3sink.setFormat("parquet", useGlueParquetWriter=True)
+    s3sink.writeFrame(dynamic_df)
+    
+    print('Commiting the job')
     job.commit()
     print('Program finished')
     

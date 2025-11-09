@@ -1,5 +1,25 @@
 ### Command line scripts worth noting
 
+> Create / update glue catalog and save file to s3 at once
+```python
+
+    s3sink = glueContext.getSink(
+        path="s3://formulaonegc/f1_sink_fact/",
+        connection_type="s3",
+        enableUpdateCatalog = True,
+        updateBehavior="UPDATE_IN_DATABASE",
+        partitionKeys=["race_year"],
+        compression="snappy"
+    )
+        
+    s3sink.setCatalogInfo(
+        catalogDatabase="admin_prod", catalogTableName="f1_sink"
+    )
+        
+    s3sink.setFormat("parquet", useGlueParquetWriter=True)
+    s3sink.writeFrame(dynamic_df)
+```
+
 > to get table columns
 ``` bash
 aws glue get-table --database-name admin_prod --name tabledriver_standings --query "Table.{Table:Name,Columns:StorageDescriptor.Columns[*].Name}"
@@ -7,7 +27,8 @@ aws glue get-table --database-name admin_prod --name tabledriver_standings --que
 
 > Glue Context additional_options (we cant find this shit anywhere so saving up all I have used)
 ```json
-    "enableUpdateCatalog": True
+    "enableUpdateCatalog": True/False,
+    "updateBehavior": "UPDATE_IN_DATABASE"/"LOG"
 ```
 
 > Spark writing for best performace
